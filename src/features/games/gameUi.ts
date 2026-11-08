@@ -1,0 +1,46 @@
+import type { GameInfo } from './api';
+
+// شكل كل لعبة في الواجهة (الاسم وعدد اللاعبين الحقيقيين بيجوا من جدول games في قاعدة البيانات)
+interface GameUi { icon: string; title: string; blurb: string; howTo: string[] }
+
+const GAME_UI: Record<string, GameUi> = {
+  sing: {
+    icon: '🎤',
+    title: 'يلا غني مع الحرف',
+    blurb: 'مغنّي بالدور وحرف عشوائي، والكل يصوّت بالنجوم',
+    howTo: [
+      'بيظهر حرف عشوائي، والمغنّي (بالدور) يغنّي على الحرف ده.',
+      'عندك 40 ثانية للتسجيل.',
+      'باقي اللاعبين يسمعوك ويصوّتوا بالنجوم من 0 لـ5.',
+      'تقدر تستخدم كروت زي «فرصة ثانية» و«تخطي الدور» و«خصم النقاط».',
+      'في الآخر، صاحب أعلى نقاط هو الفايز.',
+    ],
+  },
+  who_am_i: {
+    icon: '🎭',
+    title: 'أنا مين؟',
+    blurb: 'الكل يشوف الشخصية إلا إنت.. اسأل وخمّن',
+    howTo: [
+      'لكل لاعب دور، وفيه شخصية سرية الكل بيشوفها إلا صاحب الدور.',
+      'اسأل أي لاعب أسئلة كتابية، وهو يجاوب بـ«أيوه» أو «لأ» أو «ممكن» أو «مش عارف».',
+      'دوس «أنا عرفت!» وخمّن من 4 اختيارات (3 محاولات).',
+      'النقاط: 100 للمحاولة الأولى، 70 للتانية، 40 للتالتة.',
+      'مدة الدور 3 دقايق، وبعد ما الكل يلعب بتظهر لوحة الترتيب.',
+    ],
+  },
+};
+
+export function gameUi(id: string): GameUi {
+  return GAME_UI[id] ?? { icon: '🎲', title: 'لعبة', blurb: '', howTo: [] };
+}
+
+// الاسم من قاعدة البيانات لو متاح، وإلا الاسم الافتراضي
+export function gameTitle(games: GameInfo[], id: string): string {
+  return games.find((g) => g.id === id)?.title ?? gameUi(id).title;
+}
+
+// قايمة احتياطية تظهر فوراً (قبل تحميل جدول games، أو لو التحميل فشل)
+export const FALLBACK_GAMES: GameInfo[] = [
+  { id: 'sing', title: GAME_UI.sing.title, min_players: 2, max_players: 15, enabled: true, sort_order: 1 },
+  { id: 'who_am_i', title: GAME_UI.who_am_i.title, min_players: 3, max_players: 10, enabled: true, sort_order: 2 },
+];

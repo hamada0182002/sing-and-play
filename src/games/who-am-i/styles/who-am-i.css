@@ -1,0 +1,294 @@
+/* «أنا مين؟» — أنماط معزولة تحت .wai-root. الألوان/الخطوط/الأزرار/التذاكر مأخوذة حرفيًا من ملف الهوية البصرية.
+   عند الدمج: إن كانت المنصة تعرّف نفس الألوان كمتغيرات، اربط المتغيرات --wai-* بها (انظر INTEGRATION.md). */
+.wai-root {
+  --wai-charcoal: #101412;   /* فحم المسرح */
+  --wai-backstage: #1B2220;  /* رمادي الكواليس */
+  --wai-flame: #F26A2E;      /* برتقال اللهب */
+  --wai-brick: #B5391F;      /* طوب الستارة */
+  --wai-butter: #F2B93B;     /* ذهب الزبدة */
+  --wai-olive: #8A9145;      /* زيتوني */
+  --wai-ivory: #F4EBD9;      /* عاج النص */
+  --wai-muted: #BDC6C0;
+  --wai-soft: #DDE2DC;
+  --wai-line: #37413D;
+  --wai-line-soft: #29312E;
+  --wai-font-display: Lalezar, Tajawal, sans-serif;
+  --wai-font-body: Tajawal, sans-serif;
+
+  direction: rtl;
+  font-family: var(--wai-font-body);
+  font-weight: 500;
+  color: var(--wai-ivory);
+  background: var(--wai-charcoal);
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+.wai-root *, .wai-root *::before, .wai-root *::after { box-sizing: border-box; }
+.wai-root button { font-family: inherit; }
+.wai-d { font-family: var(--wai-font-display); font-weight: 400; }
+.wai-icon { flex: none; }
+
+/* ───────── هيكل الشاشة ───────── */
+.wai-screen {
+  height: 100%; width: 100%; max-width: 480px; margin: 0 auto;
+  display: flex; flex-direction: column; padding: 20px 16px 0; overflow-y: auto; overflow-x: hidden;
+  animation: wai-in .28s ease-out both;
+}
+.wai-screen--wide { max-width: 1040px; }
+.wai-screen > .wai-grow { flex: 1; }
+.wai-center { text-align: center; }
+.wai-stack { display: flex; flex-direction: column; gap: 14px; }
+.wai-footer { margin-top: auto; padding: 14px 0 18px; display: flex; flex-direction: column; gap: 10px; }
+.wai-footer--sticky { position: sticky; bottom: 0; background: linear-gradient(transparent, var(--wai-charcoal) 28%); padding-top: 26px; }
+@keyframes wai-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.wai-eyebrow { font-size: 14px; color: var(--wai-muted); font-weight: 700; }
+.wai-title { font-family: var(--wai-font-display); font-size: 34px; line-height: 1.15; color: var(--wai-butter); margin: 2px 0; }
+.wai-title--xl { font-size: 52px; }
+.wai-lead { font-size: 16px; line-height: 1.6; color: var(--wai-soft); }
+.wai-small { font-size: 13px; color: var(--wai-muted); font-weight: 700; }
+
+/* ───────── الهيدر ───────── */
+.wai-header { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 15px; gap: 8px; }
+.wai-pill { background: var(--wai-backstage); border-radius: 20px; padding: 6px 14px; color: var(--wai-butter); white-space: nowrap; }
+.wai-pill--plain { background: transparent; padding-inline: 0; color: var(--wai-ivory); }
+
+/* ───────── الأزرار (الظل السفلي السميك من الهوية) ───────── */
+.wai-btn {
+  font-family: var(--wai-font-display); border: 0; border-radius: 16px; min-height: 48px; padding: 0 26px; font-size: 22px;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; line-height: 1;
+  transition: transform .08s ease, box-shadow .08s ease, opacity .2s; user-select: none; touch-action: manipulation;
+}
+.wai-btn--lg { min-height: 60px; font-size: 28px; }
+.wai-btn--sm { min-height: 40px; font-size: 18px; padding: 0 18px; border-radius: 14px; }
+.wai-btn--block { width: 100%; }
+.wai-btn--butter { background: var(--wai-butter); color: var(--wai-charcoal); box-shadow: 0 5px 0 #A9741A; }
+.wai-btn--flame { background: var(--wai-flame); color: var(--wai-charcoal); box-shadow: 0 5px 0 #8f3a12; }
+.wai-btn--brick { background: var(--wai-brick); color: var(--wai-ivory); box-shadow: 0 5px 0 #6e200f; }
+.wai-btn--dark { background: var(--wai-backstage); color: var(--wai-ivory); box-shadow: inset 0 0 0 2px var(--wai-line); }
+.wai-btn--ghost { background: transparent; color: var(--wai-ivory); box-shadow: inset 0 0 0 3px var(--wai-ivory); }
+.wai-btn:active:not([disabled]) { transform: translateY(4px); }
+.wai-btn--butter:active:not([disabled]) { box-shadow: 0 1px 0 #A9741A; }
+.wai-btn--flame:active:not([disabled]) { box-shadow: 0 1px 0 #8f3a12; }
+.wai-btn--brick:active:not([disabled]) { box-shadow: 0 1px 0 #6e200f; }
+.wai-btn[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.wai-btn:focus-visible, .wai-opt:focus-visible, .wai-root textarea:focus-visible, .wai-target:focus-visible, .wai-suggest:focus-visible {
+  outline: 3px solid var(--wai-ivory); outline-offset: 3px;
+}
+.wai-link { background: none; border: 0; color: var(--wai-muted); font-weight: 800; font-size: 14px; text-decoration: underline; cursor: pointer; padding: 8px; }
+
+/* ───────── أفاتار / شرائح ───────── */
+.wai-avatar {
+  position: relative; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--wai-font-display); color: var(--wai-charcoal); flex: none; margin: 0 auto;
+}
+.wai-avatar--butter { background: var(--wai-butter); } .wai-avatar--olive { background: var(--wai-olive); }
+.wai-avatar--flame { background: var(--wai-flame); } .wai-avatar--brick { background: var(--wai-brick); color: var(--wai-ivory); }
+.wai-avatar--ivory { background: var(--wai-ivory); }
+.wai-avatar.is-ring { box-shadow: 0 0 0 3px var(--wai-ivory); }
+.wai-avatar.is-dim { opacity: .4; }
+.wai-avatar__badge { position: absolute; bottom: -4px; inset-inline-start: -4px; background: var(--wai-charcoal); color: var(--wai-butter); border-radius: 10px; font-size: 14px; padding: 0 6px; line-height: 16px; font-family: var(--wai-font-body); font-weight: 800; animation: wai-pulse 1s infinite; }
+
+.wai-chip { display: inline-block; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: 800; }
+.wai-chip--dark { background: rgba(16,20,18,.14); color: inherit; }
+.wai-chip--olive { background: var(--wai-olive); color: var(--wai-charcoal); }
+.wai-chip--brick { background: var(--wai-brick); color: var(--wai-ivory); }
+.wai-chip--butter { background: var(--wai-butter); color: var(--wai-charcoal); }
+.wai-chip--ivory { background: transparent; color: var(--wai-ivory); box-shadow: inset 0 0 0 2px var(--wai-ivory); }
+.wai-chip--flame { background: var(--wai-flame); color: var(--wai-charcoal); }
+
+/* ───────── التذاكر ───────── */
+.wai-ticket { position: relative; border-radius: 16px; padding: 12px 14px; color: var(--wai-charcoal); }
+.wai-ticket::before, .wai-ticket::after { content: ""; position: absolute; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: var(--wai-charcoal); }
+.wai-ticket::before { right: -7px; } .wai-ticket::after { left: -7px; }
+.wai-ticket--butter { background: var(--wai-butter); } .wai-ticket--olive { background: var(--wai-olive); }
+.wai-ticket--flame { background: var(--wai-flame); } .wai-ticket--brick { background: var(--wai-brick); color: var(--wai-ivory); }
+.wai-ticket--ivory { background: var(--wai-ivory); } .wai-ticket--dark { background: var(--wai-backstage); color: var(--wai-ivory); box-shadow: inset 0 0 0 2px var(--wai-line); }
+.wai-ticket--dark::before, .wai-ticket--dark::after { box-shadow: none; }
+.wai-ticket__name { font-family: var(--wai-font-display); font-size: 32px; line-height: 1.2; }
+
+/* ───────── الأسطوانة وحلقة المؤقت ───────── */
+.wai-vinyl { position: relative; margin: 0 auto; flex: none; }
+.wai-vinyl--xs { width: 92px; height: 92px; } .wai-vinyl--sm { width: 120px; height: 120px; } .wai-vinyl--md { width: 168px; height: 168px; } .wai-vinyl--lg { width: 260px; height: 260px; }
+.wai-vinyl__ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wai-vinyl__track { fill: none; stroke: var(--wai-line-soft); stroke-width: 12; }
+.wai-vinyl__arc { fill: none; stroke: var(--wai-butter); stroke-width: 12; stroke-linecap: round; transition: stroke .4s; }
+.wai-vinyl.is-low .wai-vinyl__arc { stroke: var(--wai-brick); animation: wai-pulse 1s infinite; }
+.wai-vinyl__disc {
+  position: absolute; inset: 9%; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle, var(--wai-charcoal) 0 6%, var(--wai-flame) 6.5% 36%, var(--wai-backstage) 37% 100%);
+}
+.wai-vinyl.is-spin .wai-vinyl__disc { animation: wai-spin 9s linear infinite; }
+.wai-vinyl__label {
+  font-family: var(--wai-font-display); color: var(--wai-charcoal); font-size: 76px; line-height: 1;
+  /* حدّ أبيض حوالين علامة الاستفهام عشان تبان فوق الأسطوانة وهي بتلف */
+  --o: .05em;
+  text-shadow: var(--o) 0 #fff, calc(var(--o) * -1) 0 #fff, 0 var(--o) #fff, 0 calc(var(--o) * -1) #fff,
+    var(--o) var(--o) #fff, calc(var(--o) * -1) var(--o) #fff, var(--o) calc(var(--o) * -1) #fff, calc(var(--o) * -1) calc(var(--o) * -1) #fff,
+    0 0 calc(var(--o) * 2) #fff;
+}
+.wai-vinyl--xs .wai-vinyl__label { font-size: 46px; }
+.wai-vinyl--lg .wai-vinyl__label { font-size: 120px; }
+.wai-vinyl--sm .wai-vinyl__label { font-size: 52px; }
+@keyframes wai-spin { to { transform: rotate(360deg); } }
+@keyframes wai-pulse { 50% { opacity: .55; } }
+
+.wai-time { text-align: center; margin-top: 6px; }
+.wai-time__n { font-family: var(--wai-font-display); font-size: 44px; line-height: 1; }
+.wai-time__n.is-low { color: var(--wai-flame); }
+.wai-time__l { font-size: 15px; font-weight: 700; margin-inline-start: 8px; }
+
+/* ───────── شاشة الدور ───────── */
+.wai-turn { display: grid; gap: 8px; grid-template-columns: 1fr; grid-template-areas: "head" "who" "stage" "actions" "log" "strip"; grid-template-rows: auto auto auto auto minmax(190px,1fr) auto; height: 100%; padding-bottom: 0; }
+.wai-turn > .wai-header { grid-area: head; } .wai-turn__who { grid-area: who; text-align: center; margin-top: 0; line-height: 1.1; }
+.wai-turn__stage { grid-area: stage; display: flex; flex-direction: column; gap: 8px; }
+.wai-stage-row { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.wai-stage-info { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
+.wai-turn .wai-time { margin-top: 0; }
+.wai-turn .wai-time__n { font-size: 36px; }
+.wai-turn .wai-time__l { font-size: 13px; margin-inline-start: 6px; }
+.wai-turn__actions { grid-area: actions; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wai-turn__actions > .wai-note { grid-column: 1 / -1; padding: 8px 12px; font-size: 13.5px; }
+.wai-turn__actions .wai-btn { min-height: 54px; font-size: 20px; padding: 0 8px; gap: 8px; line-height: 1.1; text-align: center; }
+.wai-turn__actions .wai-btn svg { width: 22px; height: 22px; }
+.wai-turn__log { grid-area: log; min-height: 0; display: flex; flex-direction: column; }
+.wai-turn > .wai-strip { grid-area: strip; padding: 8px 0 12px; }
+.wai-turn__target-name { font-family: var(--wai-font-display); font-size: 28px; color: var(--wai-butter); line-height: 1.15; }
+.wai-turn__who .wai-eyebrow { font-size: 13px; }
+@media (min-width: 900px) {
+  .wai-turn { max-width: 1040px; column-gap: 28px; grid-template-columns: 420px 1fr; grid-template-areas: "head head" "who log" "stage log" "actions log" "strip strip"; grid-template-rows: auto auto auto 1fr auto; }
+  .wai-vinyl--xs { width: 120px; height: 120px; }
+  .wai-vinyl--xs .wai-vinyl__label { font-size: 60px; }
+}
+
+.wai-secret { display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center; padding: 8px 14px; }
+.wai-secret__cap { font-size: 13px; font-weight: 800; opacity: .8; }
+.wai-secret .wai-ticket__name { font-size: 32px; }
+.wai-turn .wai-ticket { padding: 6px 12px; }
+
+/* ───────── سجل الأسئلة ───────── */
+.wai-log__title { font-family: var(--wai-font-display); font-size: 24px; color: var(--wai-butter); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: baseline; }
+.wai-log { flex: 1; min-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 2px 2px 8px; scroll-behavior: smooth; }
+.wai-log__empty { color: var(--wai-muted); font-size: 15px; text-align: center; padding: 18px 8px; border: 2px dashed var(--wai-line); border-radius: 14px; }
+.wai-qa { background: var(--wai-backstage); border-radius: 14px; padding: 10px 12px; box-shadow: inset 0 0 0 2px var(--wai-line-soft); animation: wai-in .25s ease-out both; }
+.wai-qa--pending { box-shadow: inset 0 0 0 2px var(--wai-butter); }
+.wai-qa--cancelled { opacity: .5; }
+.wai-qa__who { font-size: 12.5px; color: var(--wai-muted); font-weight: 800; }
+.wai-qa__text { font-size: 18px; font-weight: 700; margin: 2px 0 8px; line-height: 1.5; overflow-wrap: anywhere; }
+.wai-qa__ans { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+
+/* ───────── الشريط السفلي (اللاعبون) ───────── */
+.wai-strip { display: flex; gap: 8px; border-top: 2px solid var(--wai-line-soft); padding: 12px 0 16px; overflow-x: auto; }
+.wai-strip__item { flex: 0 0 auto; width: 58px; text-align: center; }
+.wai-strip__name { font-size: 11px; font-weight: 700; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wai-strip__score { font-family: var(--wai-font-display); font-size: 14px; color: var(--wai-butter); line-height: 1.1; }
+
+/* ───────── ورقة سفلية (اختيار اللاعب / كتابة السؤال / الإجابة) ───────── */
+.wai-sheet-wrap { position: absolute; inset: 0; z-index: 20; display: flex; align-items: flex-end; justify-content: center; background: rgba(16,20,18,.72); animation: wai-fade .2s both; }
+@keyframes wai-fade { from { opacity: 0; } }
+.wai-sheet { width: 100%; max-width: 480px; background: var(--wai-backstage); border-radius: 24px 24px 0 0; padding: 18px 16px 22px; box-shadow: 0 -2px 0 var(--wai-line); animation: wai-up .28s cubic-bezier(.2,.9,.3,1) both; max-height: 92%; overflow-y: auto; }
+@keyframes wai-up { from { transform: translateY(40px); opacity: 0; } }
+.wai-sheet__grab { width: 44px; height: 5px; border-radius: 3px; background: var(--wai-line); margin: -6px auto 12px; }
+.wai-sheet__title { font-family: var(--wai-font-display); font-size: 28px; color: var(--wai-butter); margin-bottom: 4px; }
+@media (min-width: 900px) { .wai-sheet-wrap { align-items: center; } .wai-sheet { border-radius: 24px; } }
+
+.wai-targets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+.wai-target { background: var(--wai-charcoal); border: 0; border-radius: 16px; padding: 12px 4px; color: var(--wai-ivory); cursor: pointer; box-shadow: inset 0 0 0 2px var(--wai-line); display: flex; flex-direction: column; gap: 6px; align-items: center; font-weight: 800; font-size: 14px; transition: transform .1s; }
+.wai-target:active { transform: scale(.96); }
+.wai-target.is-sel { box-shadow: inset 0 0 0 3px var(--wai-butter); }
+.wai-target__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 4px; }
+
+.wai-root textarea {
+  width: 100%; min-height: 96px; resize: none; background: var(--wai-charcoal); color: var(--wai-ivory); border: 0; border-radius: 16px;
+  padding: 14px; font-family: var(--wai-font-body); font-weight: 700; font-size: 18px; line-height: 1.6; box-shadow: inset 0 0 0 2px var(--wai-line); direction: rtl;
+}
+.wai-root textarea::placeholder { color: var(--wai-muted); opacity: .8; }
+.wai-suggests { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.wai-suggest { border: 0; background: transparent; color: var(--wai-soft); box-shadow: inset 0 0 0 2px var(--wai-line); border-radius: 20px; padding: 6px 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.wai-suggest:active { background: var(--wai-line); }
+.wai-row { display: flex; gap: 10px; align-items: center; }
+.wai-count { font-size: 12px; color: var(--wai-muted); font-weight: 800; margin-inline-start: auto; }
+
+.wai-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.wai-answer { min-height: 72px; font-size: 28px; white-space: nowrap; padding: 0 10px; }
+.wai-question-card { background: var(--wai-charcoal); border-radius: 16px; padding: 14px; box-shadow: inset 0 0 0 2px var(--wai-butter); margin: 10px 0 4px; }
+.wai-question-card .wai-qa__text { font-size: 21px; margin: 4px 0 0; }
+
+/* ───────── التخمين ───────── */
+.wai-guess { background: var(--wai-charcoal); position: absolute; inset: 0; z-index: 30; display: flex; justify-content: center; }
+.wai-attempts { display: flex; gap: 8px; justify-content: center; margin: 8px 0 4px; }
+.wai-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--wai-butter); box-shadow: 0 0 0 2px var(--wai-butter); }
+.wai-dot.is-used { background: transparent; }
+.wai-eyebrow--alert { color: var(--wai-flame); }
+.wai-time--final .wai-time__n { font-size: 56px; color: var(--wai-flame); }
+.wai-pill .is-low { color: var(--wai-flame); }
+.wai-opts { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 16px 0; }
+@media (min-width: 560px) { .wai-opts { grid-template-columns: 1fr 1fr; } }
+.wai-opt { border: 0; text-align: start; cursor: pointer; font-family: inherit; padding: 16px 18px; min-height: 84px; display: flex; flex-direction: column; justify-content: center; gap: 6px; transition: transform .1s, box-shadow .15s; }
+.wai-opt.wai-ticket { border-radius: 16px; }
+.wai-opt:active { transform: scale(.98); }
+.wai-opt.is-sel { transform: translateY(-3px) scale(1.02); box-shadow: 0 0 0 4px var(--wai-ivory); }
+.wai-opt .wai-ticket__name { font-size: 28px; }
+
+.wai-result { position: absolute; inset: 0; z-index: 40; background: rgba(16,20,18,.94); display: flex; align-items: center; justify-content: center; padding: 20px; animation: wai-fade .2s both; }
+.wai-result__card { text-align: center; max-width: 360px; width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: center; animation: wai-pop .45s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes wai-pop { from { transform: scale(.7); opacity: 0; } }
+.wai-result__big { font-family: var(--wai-font-display); font-size: 64px; line-height: 1.05; }
+.wai-result__big--ok { color: var(--wai-butter); } .wai-result__big--bad { color: var(--wai-flame); }
+.wai-points { font-family: var(--wai-font-display); font-size: 88px; color: var(--wai-butter); line-height: 1; }
+
+/* ───────── الكشف ───────── */
+.wai-reveal-card { perspective: 900px; margin: 14px 0 4px; }
+.wai-reveal-card__in { animation: wai-flip .9s cubic-bezier(.3,1.2,.4,1) both; transform-origin: center; }
+@keyframes wai-flip { from { transform: rotateY(90deg) scale(.8); opacity: 0; } }
+.wai-reveal-card .wai-ticket { padding: 22px 16px; text-align: center; }
+.wai-reveal-card .wai-ticket__name { font-size: 44px; }
+.wai-bar { height: 8px; border-radius: 4px; background: var(--wai-line-soft); overflow: hidden; margin: 6px 0; }
+.wai-bar > i { display: block; height: 100%; background: var(--wai-butter); width: 100%; transform-origin: right; transition: transform .25s linear; }
+
+/* ───────── لوحة الترتيب ───────── */
+.wai-podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin: 18px 0 8px; }
+.wai-podium__col { flex: 1; max-width: 120px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.wai-podium__block { width: 100%; border-radius: 14px 14px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; font-family: var(--wai-font-display); font-size: 34px; color: var(--wai-charcoal); }
+.wai-podium__name { font-weight: 800; font-size: 15px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wai-podium__pts { font-family: var(--wai-font-display); color: var(--wai-butter); font-size: 22px; }
+.wai-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.wai-prow { display: flex; align-items: center; gap: 12px; background: var(--wai-backstage); border-radius: 14px; padding: 10px 12px; box-shadow: inset 0 0 0 2px var(--wai-line-soft); }
+.wai-prow.is-me { box-shadow: inset 0 0 0 2px var(--wai-butter); }
+.wai-prow__rank { font-family: var(--wai-font-display); font-size: 24px; width: 28px; text-align: center; color: var(--wai-butter); }
+.wai-prow__name { flex: 1; font-weight: 800; font-size: 17px; }
+.wai-prow__sub { font-size: 12px; color: var(--wai-muted); font-weight: 700; }
+.wai-prow__pts { font-family: var(--wai-font-display); font-size: 26px; }
+
+/* ───────── مقدمة/قوانين/انتظار ───────── */
+.wai-brand { font-family: var(--wai-font-display); direction: ltr; text-align: right; font-size: 20px; color: var(--wai-muted); }
+.wai-brand b { font-weight: 400; color: var(--wai-butter); }
+.wai-rule { display: flex; gap: 12px; align-items: flex-start; }
+.wai-rule__n { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--wai-flame); color: var(--wai-charcoal); font-family: var(--wai-font-display); font-size: 20px; display: flex; align-items: center; justify-content: center; }
+.wai-rule__t { font-size: 15.5px; line-height: 1.6; font-weight: 700; color: var(--wai-soft); }
+.wai-rule__t b { color: var(--wai-butter); font-weight: 800; }
+.wai-pts { display: flex; gap: 10px; }
+.wai-pts .wai-ticket { flex: 1; text-align: center; padding: 10px 6px; }
+.wai-pts .wai-ticket__name { font-size: 30px; }
+.wai-players { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; margin: 12px 0; }
+.wai-lobbyp { background: var(--wai-backstage); border-radius: 16px; padding: 12px 6px; text-align: center; box-shadow: inset 0 0 0 2px var(--wai-line-soft); display: flex; flex-direction: column; gap: 6px; align-items: center; font-weight: 800; font-size: 14px; }
+.wai-lobbyp small { color: var(--wai-muted); font-size: 11px; }
+.wai-lobbyp.is-me { box-shadow: inset 0 0 0 2px var(--wai-butter); }
+.wai-note { background: var(--wai-backstage); border-radius: 14px; padding: 12px 14px; font-size: 14.5px; color: var(--wai-soft); line-height: 1.6; box-shadow: inset 0 0 0 2px var(--wai-line-soft); }
+.wai-note--warn { box-shadow: inset 0 0 0 2px var(--wai-flame); }
+
+.wai-toast { position: absolute; z-index: 60; top: 14px; left: 50%; transform: translateX(-50%); background: var(--wai-brick); color: var(--wai-ivory); border-radius: 14px; padding: 10px 18px; font-weight: 800; font-size: 15px; box-shadow: 0 4px 0 #6e200f; animation: wai-in .2s both; max-width: 90%; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wai-root *, .wai-root *::before, .wai-root *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
+}
+
+/* ───── منع «الرمش»: إعادة رسم نفس الشاشة ما تكرّرش حركة الدخول، والحركات المستمرة متصلة بالساعة ───── */
+.wai-root .wai-still { animation: none !important; }
+.wai-root .wai-vinyl.is-spin .wai-vinyl__disc { animation-delay: var(--wai-d9, 0ms); }
+.wai-root .wai-avatar__badge,
+.wai-root .wai-vinyl.is-low .wai-vinyl__arc { animation-delay: var(--wai-d1, 0ms); }

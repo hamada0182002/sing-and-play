@@ -1,0 +1,18 @@
+:root {
+  --ground: #101412;
+  --surface: #1b2220;
+  --line: #37413d;
+  --line-soft: #29312e;
+  --flame: #f26a2e;
+  --flame-edge: #8f3a12;
+  --brick: #b5391f;
+  --butter: #f2b93b;
+  --butter-edge: #a9741a;
+  --olive: #8a9145;
+  --ivory: #f4ebd9;
+  --muted: #bdc6c0;
+  --font-display: 'Lalezar', 'Tajawal', sans-serif;
+  --font-body: 'Tajawal', sans-serif;
+  --radius: 16px;
+  --tap: 48px;
+}

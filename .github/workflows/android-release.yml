@@ -1,0 +1,104 @@
+name: Android Release
+
+# يُشغَّل يدويًا فقط (زر Run workflow من تبويب Actions) — لا علاقة له بنشر نسخة الويب
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      VITE_UPDATE_URL: https://github.com/${{ github.repository }}/releases/latest/download/version.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Read version
+        id: ver
+        run: |
+          echo "name=$(node -p "require('./android-version.json').versionName")" >> "$GITHUB_OUTPUT"
+          echo "code=$(node -p "require('./android-version.json').versionCode")" >> "$GITHUB_OUTPUT"
+
+      - name: Guard - secrets exist
+        run: |
+          for v in VITE_SUPABASE_URL VITE_SUPABASE_ANON_KEY; do
+            if [ -z "${!v}" ]; then echo "::error::السر $v غير مضاف في GitHub Secrets"; exit 1; fi
+          done
+          for v in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [ -z "$(printenv $v)" ]; then echo "::error::السر $v غير مضاف في GitHub Secrets"; exit 1; fi
+          done
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Guard - version must be new
+        run: |
+          TAG="android-v${{ steps.ver.outputs.name }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::الإصدار $TAG منشور بالفعل. غيّر versionName و versionCode في android-version.json"; exit 1
+          fi
+          PREV=$(curl -fsSL "$VITE_UPDATE_URL" 2>/dev/null | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s).versionCode)}catch{console.log(0)}})")
+          echo "آخر versionCode منشور: $PREV"
+          if [ "${{ steps.ver.outputs.code }}" -le "$PREV" ]; then
+            echo "::error::versionCode (${{ steps.ver.outputs.code }}) لازم يكون أكبر من المنشور ($PREV)"; exit 1
+          fi
+          test -f "release-notes/${{ steps.ver.outputs.name }}.md" || { echo "::error::أنشئ ملف release-notes/${{ steps.ver.outputs.name }}.md"; exit 1; }
+
+      - run: npm install --no-audit --no-fund
+
+      - name: Build web assets for Android
+        run: npm run build:android
+
+      - name: Create / sync Android project
+        run: |
+          [ -d android ] || npx cap add android
+          node scripts/android-prepare.mjs
+          npx cap sync android
+
+      - name: Decode keystore
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      - name: Build signed APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Verify signature and publish
+        run: |
+          APK_SRC=$(ls android/app/build/outputs/apk/release/*.apk | head -n1)
+          APK="SingAndPlay-${{ steps.ver.outputs.name }}.apk"
+          cp "$APK_SRC" "$APK"
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -n1)
+          "$APKSIGNER" verify --print-certs "$APK" | tee cert.txt
+          grep -q "SHA-256 digest" cert.txt
+          node scripts/make-version-json.mjs "$APK" "$APK"
+          NOTES=$(cat "release-notes/${{ steps.ver.outputs.name }}.md")
+          printf '%s\n\nبصمة شهادة التوقيع:\n%s\n' "$NOTES" "$(grep 'certificate SHA-256' cert.txt)" > release-body.md
+          gh release create "android-v${{ steps.ver.outputs.name }}" "$APK" version.json \
+            --title "SING & PLAY ${{ steps.ver.outputs.name }}" \
+            --notes-file release-body.md \
+            --target "${{ github.sha }}"
