@@ -8,7 +8,7 @@ dist
 supabase/functions/who-am-i/tests/.core.mjs
 
 # أندرويد: المجلد يُولَّد تلقائيًا في GitHub Actions، والمفاتيح ممنوع رفعها نهائيًا
-android/
+/android/
 *.jks
 *.keystore
 keystore/
