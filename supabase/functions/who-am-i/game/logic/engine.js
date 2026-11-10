@@ -158,6 +158,7 @@ export function submitQuestion(state, actorId, { targetId, text }, { now = Date.
   const t = activeTurn(s, now);
   need(actorId === t.playerId, 'NOT_YOUR_TURN', 'مش دورك');
   need(!t.finalGuess, 'FINAL_GUESS', 'الوقت خلص — اختار تخمينك');
+  need(!t.guessOptions, 'GUESSING', 'إنت في وضع التخمين — اختار شخصية'); // مفيش رجوع للأسئلة بعد «أنا عرفت!»
   assertPlayer(s, targetId);
   need(targetId !== actorId, 'SELF_TARGET', 'اختار لاعب غيرك');
   const clean = String(text || '').replace(/\s+/g, ' ').trim();
@@ -220,13 +221,10 @@ export function requestGuess(state, actorId, { rng = Math.random, now = Date.now
 }
 
 export function cancelGuess(state, actorId, { now = Date.now() } = {}) {
-  const s = structuredClone(state);
-  const t = activeTurn(s, now);
+  const t = activeTurn(state, now);
   need(actorId === t.playerId, 'NOT_YOUR_TURN', 'مش دورك');
-  need(!t.finalGuess, 'FINAL_GUESS', 'الوقت خلص — لازم تختار');
-  t.guessOptions = null;
-  s.version += 1;
-  return { state: s, events: [] };
+  // مفيش رجوع: أول ما تدوس «أنا عرفت!» لازم تختار (ممنوع تشوف الاختيارات وترجع تسأل)
+  throw new GameError('NO_RETURN', 'مفيش رجوع — لازم تختار');
 }
 
 function finishTurn(s, outcome, now, events) {

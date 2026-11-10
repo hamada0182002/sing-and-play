@@ -2,11 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// بناء الأندرويد (--mode android) بدون PWA: الملفات مدمجة داخل الـAPK ولا نحتاج Service Worker
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [
     react(),
-    ...(mode === 'android' ? [] : [VitePWA({
+    VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
@@ -26,6 +25,6 @@ export default defineConfig(({ mode }) => ({
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       }
-    })])
+    })
   ]
-}));
+});

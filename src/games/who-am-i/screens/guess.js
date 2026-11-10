@@ -9,7 +9,7 @@ export function GuessScreen(c) {
   const t = view.turn;
   const opts = t.guessOptions;
   const max = view.settings.maxGuesses;
-  const fin = !!t.finalGuess; // الوقت خلص: مهلة قصيرة للاختيار، ومفيش رجوع للأسئلة
+  const fin = !!t.finalGuess; // الوقت خلص: مهلة قصيرة للاختيار. وفي كل الحالات مفيش رجوع للأسئلة بعد ما تدوس «أنا عرفت!»
   let confirming = false;
   const confirmBtn = Button('ثبّت إجابتي', {
     variant: 'butter', size: 'lg', block: true, iconName: 'check', disabled: !ui.choice,
@@ -25,7 +25,7 @@ export function GuessScreen(c) {
     h('div', { class: 'wai-screen', style: { maxWidth: '560px' } },
       Header({ left: `المحاولة ${ar(t.attempts.length + 1)} من ${ar(max)}`, right: h('span', { 'data-wai-time': '' }, '٣:٠٠') }),
       h('div', { class: 'wai-center', style: { marginTop: '16px' } },
-        h('div', { class: `wai-eyebrow${fin ? ' wai-eyebrow--alert' : ''}` }, fin ? 'الوقت خلص! اختار قبل ما المهلة تخلص' : 'الوقت شغّال — فكّر كويس'),
+        h('div', { class: `wai-eyebrow${fin ? ' wai-eyebrow--alert' : ''}` }, fin ? 'الوقت خلص! اختار قبل ما المهلة تخلص' : 'لازم تختار — مفيش رجوع للأسئلة'),
         h('div', { class: 'wai-title wai-title--xl' }, 'أنا مين؟'),
         h('div', { class: 'wai-attempts', 'aria-label': 'المحاولات' },
           Array.from({ length: max }, (_, i) => h('span', { class: `wai-dot${i < t.attempts.length ? ' is-used' : ''}` }))),
@@ -38,8 +38,7 @@ export function GuessScreen(c) {
           onClick: () => c.setUi({ choice: o.id }),
         }, h('div', { class: 'wai-ticket__name' }, o.name)))),
       h('div', { class: 'wai-footer wai-footer--sticky' },
-        confirmBtn,
-        !fin && Button('لسه، رجّعني للأسئلة', { variant: 'ghost', size: 'sm', block: true, iconName: 'back', onClick: () => { c.ui.choice = null; c.act(c.adapter.cancelGuess()); } }))));
+        confirmBtn)));
 }
 
 export function GuessResultScreen(c) {

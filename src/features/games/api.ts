@@ -44,6 +44,22 @@ export async function startWhoAmI(roomId: string): Promise<void> {
   if (!r || !r.ok) throw new Error(r?.error?.message ?? 'start_failed');
 }
 
+// الأدمن بس: بدء لعبة أتوبيس كومبليت (الخادم بيتأكد من الأدمن والعدد وبيجهّز اللعبة)
+export async function startBusComplete(roomId: string): Promise<void> {
+  const { data, error } = await db().functions.invoke('bus-complete', { body: { roomId, action: 'start' } });
+  if (error) throw new Error('network');
+  const r = data as { ok?: boolean; error?: { message?: string } } | null;
+  if (!r || !r.ok) throw new Error(r?.error?.message ?? 'start_failed');
+}
+
+// الأدمن بس: الرجوع للغرفة بعد أتوبيس كومبليت (return_to_room الخاصة بـ«أنا مين؟» ما بتنفعش هنا)
+export async function returnFromBusComplete(roomId: string): Promise<void> {
+  const { data, error } = await db().functions.invoke('bus-complete', { body: { roomId, action: 'exit' } });
+  if (error) throw new Error('network');
+  const r = data as { ok?: boolean; error?: { message?: string } } | null;
+  if (!r || !r.ok) throw new Error(r?.error?.message ?? 'exit_failed');
+}
+
 export function gamesErrorText(e: unknown): string {
   const m = e instanceof Error ? e.message : '';
   if (/[\u0600-\u06FF]/.test(m)) return m; // رسالة عربية جاهزة جاية من الخادم

@@ -6,7 +6,6 @@ import AuthScreen from './features/auth/AuthScreen';
 import SplashScreen from './features/auth/SplashScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
 import SoundSettingsScreen from './features/profile/SoundSettingsScreen';
-import UpdatesScreen from './features/updates/UpdatesScreen';
 import HomeScreen from './features/rooms/HomeScreen';
 import GameHubScreen from './features/rooms/GameHubScreen';
 import CreateRoomScreen from './features/rooms/CreateRoomScreen';
@@ -65,11 +64,9 @@ function Gate() {
     case 'rooms':
       return <RoomListScreen go={go} />;
     case 'profile':
-      return <ProfileScreen onBack={goBack} onSound={() => go({ name: 'sound' })} onUpdates={() => go({ name: 'updates' })} />;
+      return <ProfileScreen onBack={goBack} onSound={() => go({ name: 'sound' })} />;
     case 'sound':
       return <SoundSettingsScreen onBack={goBack} />;
-    case 'updates':
-      return <UpdatesScreen onBack={goBack} />;
     case 'lobby':
       return <LobbyScreen roomId={route.roomId} go={go} />;
     default:

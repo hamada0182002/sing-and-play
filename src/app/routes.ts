@@ -5,7 +5,6 @@ export type Route =
   | { name: 'rooms' }
   | { name: 'profile' }
   | { name: 'sound' }
-  | { name: 'updates' }
   | { name: 'lobby'; roomId: string };
 
 export type Go = (route: Route) => void;

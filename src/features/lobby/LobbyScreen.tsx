@@ -12,7 +12,9 @@ import { playErrorText, startGame } from '../play/api';
 import { useAuth } from '../auth/AuthProvider';
 import { fetchPlayers, fetchRoom, leaveRoom, type LobbyPlayer, type RoomRow } from '../rooms/api';
 import WhoAmIGame from '../games/WhoAmIGame';
-import { gamesErrorText, returnToRoom, startWhoAmI } from '../games/api';
+import BusCompleteGame from '../games/BusCompleteGame';
+import { gamesErrorText, returnFromBusComplete, returnToRoom, selectGame, startBusComplete, startWhoAmI } from '../games/api';
+import GamePicker from '../games/GamePicker';
 import { gameTitle, gameUi } from '../games/gameUi';
 import { useGames } from '../games/useGames';
 
@@ -25,6 +27,8 @@ export default function LobbyScreen({ roomId, go }: { roomId: string; go: Go }) 
   const [copied, setCopied] = useState(false);
   const [starting, setStarting] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [pickingGame, setPickingGame] = useState(false); // الأدمن فاتح قايمة تغيير اللعبة
+  const [switching, setSwitching] = useState(false);
   const games = useGames();
   useBackHandler(showAdmin, () => setShowAdmin(false));
 
@@ -69,6 +73,17 @@ export default function LobbyScreen({ roomId, go }: { roomId: string; go: Go }) 
     }
   }
 
+  // الأدمن يرجّع الغرفة بعد لعبة أتوبيس كومبليت (دالة خروج مستقلة على الخادم)
+  async function backFromBusComplete() {
+    try {
+      await returnFromBusComplete(roomId);
+      const r = await fetchRoom(roomId);
+      if (r) setRoom(r);
+    } catch (e) {
+      setError(gamesErrorText(e));
+    }
+  }
+
   async function leave() {
     try {
       await leaveRoom(roomId);
@@ -91,14 +106,33 @@ export default function LobbyScreen({ roomId, go }: { roomId: string; go: Go }) 
 
   const selectedGame = room?.selected_game ?? 'sing';
 
+  // الأدمن يغيّر اللعبة وهو في الغرفة (من غير ما يخرج ويعمل غرفة جديدة). الكل بيشوف التغيير لحظياً.
+  async function changeGame(gameId: string) {
+    if (gameId === selectedGame) {
+      setPickingGame(false);
+      return;
+    }
+    setSwitching(true);
+    setError('');
+    try {
+      const updated = await selectGame(roomId, gameId);
+      setRoom(updated);
+      setPickingGame(false);
+    } catch (e) {
+      setError(gamesErrorText(e));
+    }
+    setSwitching(false);
+  }
+
   async function begin() {
     setStarting(true);
     setError('');
     try {
       if (selectedGame === 'who_am_i') await startWhoAmI(roomId);
+      else if (selectedGame === 'bus_complete') await startBusComplete(roomId);
       else await startGame(roomId);
     } catch (e) {
-      setError(selectedGame === 'who_am_i' ? gamesErrorText(e) : playErrorText(e));
+      setError(selectedGame === 'who_am_i' || selectedGame === 'bus_complete' ? gamesErrorText(e) : playErrorText(e));
     }
     setStarting(false);
   }
@@ -117,6 +151,7 @@ export default function LobbyScreen({ roomId, go }: { roomId: string; go: Go }) 
 
   if (showAdmin && isAdmin && me) return <AdminPanel room={room} players={players} me={me} onClose={() => setShowAdmin(false)} />;
   if (room.status === 'playing' && room.active_game === 'who_am_i') return <WhoAmIGame roomId={roomId} canExit={isAdmin} isAdmin={isAdmin} me={me ?? ''} players={players} onExit={() => void backToRoom()} onLeave={() => void leave()} />;
+  if (room.status === 'playing' && room.active_game === 'bus_complete') return <BusCompleteGame roomId={roomId} canExit={isAdmin} isAdmin={isAdmin} me={me ?? ''} players={players} allowChat={room.allow_chat} onExit={() => void backFromBusComplete()} onLeave={() => void leave()} />;
   if (room.status === 'playing') return <GameScreen room={room} players={players} go={go} onSettings={isAdmin ? () => setShowAdmin(true) : undefined} />;
   if (room.status === 'finished') return <FinalScreen players={players} me={me ?? ''} isAdmin={isAdmin} roomId={roomId} onLeave={() => void leave()} />;
 
@@ -132,8 +167,23 @@ export default function LobbyScreen({ roomId, go }: { roomId: string; go: Go }) 
       <p className="muted" style={{ margin: 0 }}>{room.name} · {players.length} / {room.max_players} لاعباً · {room.visibility === 'public' ? 'غرفة عامة' : 'غرفة خاصة'}</p>
       <div className="game-chip">
         <span aria-hidden="true">{gameUi(selectedGame).icon}</span>
-        <span>{gameTitle(games, selectedGame)}</span>
+        <span style={{ flex: 1 }}>{gameTitle(games, selectedGame)}</span>
+        {isAdmin && (
+          <button type="button" className="link-btn" onClick={() => setPickingGame((o) => !o)}>
+            {pickingGame ? 'إغلاق' : 'غيّر اللعبة'}
+          </button>
+        )}
       </div>
+      {isAdmin && pickingGame && (
+        <GamePicker
+          games={games}
+          selected={selectedGame}
+          title="غيّر اللعبة"
+          busy={switching}
+          onSelect={(id) => void changeGame(id)}
+          disabledReason={(g) => (players.length > g.max_players ? `اللعبة دي أقصاها ${g.max_players} لاعبين وعندكم ${players.length}` : null)}
+        />
+      )}
 
       <div className="list">
         {players.map((p) => (

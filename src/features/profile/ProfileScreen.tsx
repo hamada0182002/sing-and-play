@@ -1,9 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../auth/AuthProvider';
-import { isNativeApp } from '../updates/updater';
 
-export default function ProfileScreen({ onBack, onSound, onUpdates }: { onBack: () => void; onSound: () => void; onUpdates?: () => void }) {
+export default function ProfileScreen({ onBack, onSound }: { onBack: () => void; onSound: () => void }) {
   const { profile, session, refreshProfile, signOut } = useAuth();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile?.display_name ?? '');
@@ -71,7 +70,6 @@ export default function ProfileScreen({ onBack, onSound, onUpdates }: { onBack: 
         ))}
       </div>
       <button className="btn btn-outline" type="button" onClick={onSound}>ضبط الصوت والتزامن</button>
-      {isNativeApp() && onUpdates && <button className="btn btn-outline" type="button" onClick={onUpdates}>التحديثات</button>}
       <button className="btn btn-outline" type="button" onClick={onBack}>رجوع</button>
       <button className="btn btn-outline" type="button" onClick={() => void signOut()}>تسجيل الخروج</button>
     </main>

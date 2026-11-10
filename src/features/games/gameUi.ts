@@ -28,6 +28,20 @@ const GAME_UI: Record<string, GameUi> = {
       'مدة الدور 3 دقايق، وبعد ما الكل يلعب بتظهر لوحة الترتيب.',
     ],
   },
+  bus_complete: {
+    icon: '🚌',
+    title: 'أتوبيس كومبليت',
+    blurb: 'حرف واحد وتصنيف واحد.. اكتب إجابتك قبل الوقت وراهن في السؤال الأخير',
+    howTo: [
+      'في كل سؤال بيظهر تصنيف (زي حيوان أو أكلة) وحرف، واكتب إجابة واحدة بس تبدأ بالحرف ده.',
+      'قبل ما تكتب، اختار قيمة نقاط من لوحتك. كل رقم بتستخدمه مرة واحدة طول الجولة.',
+      'إجابة صح بتاخد النقاط اللي اخترتها، وإجابة غلط ما بتخسّرك حاجة.',
+      'معاك كارت ×٢ واحد يضاعف نقاط سؤال واحد، ومينفعش تتراجع بعد ما تفعّله.',
+      'الأدمن بيراجع الإجابات المشكوك فيها والمكررة قبل ما يعتمد كل سؤال.',
+      'في الآخر سؤال نهائي: راهن بـ٠ أو ١٠ أو ٢٠ نقطة. صح تكسبهم، غلط تخسرهم.',
+      'صاحب أعلى نقاط في الترتيب النهائي هو الفايز.',
+    ],
+  },
 };
 
 export function gameUi(id: string): GameUi {
@@ -43,4 +57,5 @@ export function gameTitle(games: GameInfo[], id: string): string {
 export const FALLBACK_GAMES: GameInfo[] = [
   { id: 'sing', title: GAME_UI.sing.title, min_players: 2, max_players: 15, enabled: true, sort_order: 1 },
   { id: 'who_am_i', title: GAME_UI.who_am_i.title, min_players: 3, max_players: 10, enabled: true, sort_order: 2 },
+  { id: 'bus_complete', title: GAME_UI.bus_complete.title, min_players: 3, max_players: 10, enabled: true, sort_order: 3 },
 ];

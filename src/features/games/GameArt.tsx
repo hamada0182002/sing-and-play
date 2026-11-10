@@ -102,6 +102,68 @@ function WhoArt({ wide }: { wide?: boolean }) {
   );
 }
 
+function Letter({ x, y, ch, color, size, delay, opacity = 1 }: { x: number; y: number; ch: string; color: string; size: number; delay: number; opacity?: number }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <g className="art-float" style={{ animationDelay: `${delay}s` }}>
+        <text textAnchor="middle" fontFamily={FONT} fontSize={size} fill={color} opacity={opacity}>{ch}</text>
+      </g>
+    </g>
+  );
+}
+
+function BusArt({ wide }: { wide?: boolean }) {
+  return (
+    <svg className="gart" viewBox={wide ? '-50 36 300 125' : '0 0 200 260'} preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="g-bus" gradientUnits="userSpaceOnUse" cx="100" cy="100" r="200">
+          <stop offset="0%" stopColor="#37413d" />
+          <stop offset="100%" stopColor="#101412" />
+        </radialGradient>
+      </defs>
+      <rect x="-200" y="-100" width="600" height="500" fill="url(#g-bus)" />
+      <g transform="translate(100 96)">
+        <g className="art-pulse">
+          <circle r="66" fill="#f26a2e" />
+          <circle r="52" fill="none" stroke="#f4ebd9" strokeOpacity=".18" strokeWidth="2" />
+        </g>
+      </g>
+      <rect x="-200" y="154" width="600" height="300" fill="#101412" opacity=".6" />
+      <path d="M-60 184 H260" stroke="#f4ebd9" strokeOpacity=".3" strokeWidth="4" strokeDasharray="16 14" />
+      <rect x="22" y="63" width="156" height="74" rx="18" fill="#f2b93b" stroke="#101412" strokeWidth="4" />
+      <rect x="30" y="75" width="30" height="34" rx="8" fill="#101412" />
+      <rect x="68" y="75" width="26" height="28" rx="7" fill="#101412" />
+      <rect x="100" y="75" width="26" height="28" rx="7" fill="#101412" />
+      <rect x="132" y="75" width="26" height="28" rx="7" fill="#101412" />
+      <text x="145" y="97" textAnchor="middle" fontFamily={FONT} fontSize="26" fill="#f4ebd9">ح</text>
+      <text x="113" y="97" textAnchor="middle" fontFamily={FONT} fontSize="26" fill="#f4ebd9">ر</text>
+      <text x="81" y="97" textAnchor="middle" fontFamily={FONT} fontSize="26" fill="#f4ebd9">ف</text>
+      <rect x="24" y="115" width="152" height="9" fill="#f26a2e" />
+      <circle cx="26" cy="106" r="5" fill="#f4ebd9" />
+      <circle cx="174" cy="106" r="4" fill="#b5391f" />
+      {[58, 142].map((cx) => (
+        <g key={cx} transform={`translate(${cx} 138)`}>
+          <circle r="16" fill="#101412" stroke="#f4ebd9" strokeWidth="5" />
+          <g className="art-spin">
+            <circle r="7" fill="#f2b93b" />
+            <path d="M-7 0 H7 M0 -7 V7" stroke="#101412" strokeWidth="2.5" />
+          </g>
+        </g>
+      ))}
+      <Letter x={8} y={68} ch="أ" color="#f2b93b" size={26} delay={0} />
+      <Letter x={190} y={130} ch="ب" color="#f4ebd9" size={26} delay={1.2} opacity={0.9} />
+      <Letter x={-16} y={92} ch="م" color="#f4ebd9" size={34} delay={0.7} opacity={0.85} />
+      <Letter x={218} y={84} ch="س" color="#f2b93b" size={30} delay={1.8} />
+      <Letter x={30} y={214} ch="ك" color="#f2b93b" size={30} delay={0.4} />
+      <Letter x={172} y={222} ch="ل" color="#f4ebd9" size={26} delay={1.5} opacity={0.9} />
+      <Spark x={-30} y={60} delay={0.5} />
+      <Spark x={232} y={140} delay={1.1} />
+      <Spark x={26} y={176} delay={0.3} />
+      <Spark x={176} y={188} delay={1.3} />
+    </svg>
+  );
+}
+
 function GenericArt({ wide }: { wide?: boolean }) {
   return (
     <svg className="gart" viewBox={wide ? '0 40 200 140' : '0 0 200 260'} preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
@@ -121,5 +183,6 @@ function GenericArt({ wide }: { wide?: boolean }) {
 export default function GameArt({ id, wide }: { id: string; wide?: boolean }) {
   if (id === 'sing') return <SingArt wide={wide} />;
   if (id === 'who_am_i') return <WhoArt wide={wide} />;
+  if (id === 'bus_complete') return <BusArt wide={wide} />;
   return <GenericArt wide={wide} />;
 }

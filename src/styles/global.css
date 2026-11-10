@@ -233,6 +233,20 @@ body {
 .wai-kick { width: 100%; max-width: 480px; max-height: 85%; overflow-y: auto; background: var(--surface); border-radius: 24px 24px 0 0; padding: 18px 16px 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 -2px 0 var(--line); }
 .wai-kick-title { font-size: 26px; color: var(--butter); }
 
+/* غلاف لعبة أتوبيس كومبليت: شريط مغادرة/طرد فوق اللعبة (نفس فكرة wai-*، بأسماء منفصلة عشان ما تتأثرش لعبة بالتانية) */
+.bcg-shell { display: flex; flex-direction: column; height: 100%; background: #101412; }
+.bcg-leavebar { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 42px; padding: 4px 14px; color: var(--ivory); font-weight: 800; font-size: 14px; }
+.bcg-slot { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+.bcg-slot > .bc-root { flex: 1 1 0; min-height: 0; height: auto; }
+.bcg-leavebar .btn { min-height: 34px; padding: 0 14px; font-size: 16px; }
+.bcg-shell .chat-sheet { z-index: 80; }
+.bcg-leavebar .icon-btn { width: 38px; min-height: 36px; border-radius: 12px; }
+.bcg-leavebar .icon-btn .dot { top: -4px; right: -4px; }
+.bcg-leavebar .bcg-kick-open { color: var(--flame); }
+.bcg-kick-wrap { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; justify-content: center; background: rgba(16, 20, 18, .78); }
+.bcg-kick { width: 100%; max-width: 480px; max-height: 85%; overflow-y: auto; background: var(--surface); border-radius: 24px 24px 0 0; padding: 18px 16px 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 -2px 0 var(--line); }
+.bcg-kick-title { font-size: 26px; color: var(--butter); }
+
 /* ═════ شاشة البداية: حركة الفتح ═════ */
 .splash-disc-wrap { position: relative; width: 230px; height: 230px; animation: splash-pop .95s cubic-bezier(.2, .9, .25, 1.12) backwards; }
 .splash-ring { position: absolute; inset: -6px; border-radius: 50%; border: 3px solid var(--butter); opacity: 0; animation: splash-ring 2.8s ease-out 1.1s infinite; }

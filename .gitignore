@@ -6,10 +6,3 @@ dist
 
 # ملف مولَّد من scripts/build-edge-function.mjs (للاختبارات فقط)
 supabase/functions/who-am-i/tests/.core.mjs
-
-# أندرويد: المجلد يُولَّد تلقائيًا في GitHub Actions، والمفاتيح ممنوع رفعها نهائيًا
-/android/
-*.jks
-*.keystore
-keystore/
-version.json

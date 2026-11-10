@@ -150,7 +150,7 @@ test('انتهاء الوقت: بتظهر اختيارات التخمين ومه
   assert.equal(E.projectFor(r1.state, 'b', late).turn.guessing, true);
   // أثناء المهلة: مفيش أسئلة جديدة ولا رجوع للأسئلة
   assert.equal(code(() => E.submitQuestion(r1.state, me, { targetId: 'b', text: 'هل هو لاعب؟' }, { now: late + 1 })), 'FINAL_GUESS');
-  assert.equal(code(() => E.cancelGuess(r1.state, me, { now: late + 1 })), 'FINAL_GUESS');
+  assert.equal(code(() => E.cancelGuess(r1.state, me, { now: late + 1 })), 'NO_RETURN');
   // tick قبل انتهاء المهلة ما بيعملش حاجة
   assert.equal(E.tick(r1.state, { now: late + 5000 }).state, r1.state);
   // بعد المهلة: الدور يخلص بصفر
@@ -241,4 +241,16 @@ test('revealed character is public after the turn, including to the active playe
   state = E.tick(state, { now: state.turn.endsAt + 1 }).state;   // وبعدها الدور يخلص
   const v = E.projectFor(state, me, T);
   assert.equal(v.turn.character.name, CHARACTER_BY_ID[state.secret.characterId].name);
+});
+
+test('بعد «أنا عرفت!» مفيش رجوع للأسئلة: الاختيارات تفضل، والرجوع مرفوض، ومفيش اختيارات جديدة بتتسحب بإعادة الطلب', () => {
+  let { state } = start();
+  const me = state.turn.playerId;
+  ({ state } = E.requestGuess(state, me, ctx()));
+  const opts = [...state.turn.guessOptions];
+  assert.equal(code(() => E.cancelGuess(state, me, ctx())), 'NO_RETURN');
+  assert.deepEqual(state.turn.guessOptions, opts);
+  const again = E.requestGuess(state, me, ctx());
+  assert.deepEqual(again.state.turn.guessOptions, opts);   // نفس الاختيارات، مش اختيارات جديدة
+  assert.equal(code(() => E.submitQuestion(state, me, { targetId: 'b', text: 'هل هو لاعب؟' }, ctx())), 'GUESSING');
 });

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>أتوبيس كومبليت — تجربة</title>
+<link rel="stylesheet" href="../styles/index.css">
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0e0d; color: #F4EBD9; font-family: Tajawal, sans-serif; }
+  .lab-bar { position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 14px; background: #101412; border-bottom: 2px solid #29312E; font-weight: 700; font-size: 14px; }
+  .lab-bar b { color: #F2B93B; font-family: Lalezar, sans-serif; font-weight: 400; font-size: 20px; }
+  .lab-bar label { display: inline-flex; gap: 4px; align-items: center; }
+  .lab-bar button, .lab-bar select { background: #1B2220; color: #F4EBD9; border: 2px solid #37413D; border-radius: 10px; padding: 5px 12px; font: inherit; cursor: pointer; }
+  .lab-grid { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; padding: 18px; }
+  .lab-phone { width: 390px; height: 800px; border-radius: 34px; overflow: hidden; border: 6px solid #29312E; position: relative; background: #101412; }
+  .lab-phone > .lab-tag { position: absolute; z-index: 90; top: 6px; left: 50%; transform: translateX(-50%); background: #29312E; font-size: 11px; padding: 1px 10px; border-radius: 10px; pointer-events: none; }
+  .solo .lab-bar { display: none; }
+  .solo .lab-grid { padding: 0; display: block; }
+  .solo .lab-phone { width: 100vw; height: 100vh; border: 0; border-radius: 0; }
+  .solo .lab-tag { display: none; }
+</style>
+</head>
+<body>
+<div class="lab-bar" id="bar"></div>
+<div class="lab-grid" id="grid"></div>
+<script type="module" src="./lab.js"></script>
+</body>
+</html>

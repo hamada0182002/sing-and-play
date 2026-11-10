@@ -8,17 +8,12 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host",
     "typecheck": "tsc --noEmit",
-    "test:games": "node scripts/build-edge-function.mjs && node --test supabase/functions/who-am-i/game/tests/engine.test.mjs supabase/functions/who-am-i/tests/handler.test.mjs tests/who-am-i-e2e.test.mjs",
-    "build:android": "tsc --noEmit && vite build --mode android",
-    "android:prepare": "node scripts/android-prepare.mjs"
+    "test:games": "node scripts/build-edge-function.mjs && node --test supabase/functions/who-am-i/game/tests/engine.test.mjs supabase/functions/who-am-i/tests/handler.test.mjs tests/who-am-i-e2e.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/app": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.11",
@@ -26,7 +21,6 @@
     "@vitejs/plugin-react": "^4.3.3",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
-    "vite-plugin-pwa": "^0.20.5",
-    "@capacitor/cli": "^7.0.0"
+    "vite-plugin-pwa": "^0.20.5"
   }
 }
